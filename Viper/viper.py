@@ -16,6 +16,6 @@ class Viper:
         """
         aps = scan_aps(self.interface)
         for ap in aps:
-            result_ap = scan_ap(interface, ap)
+            result_ap = scan_ap(self.interface, ap)
             print(result_ap.asdict())
         
