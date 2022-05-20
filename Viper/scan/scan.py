@@ -1,16 +1,12 @@
-import pyrcrack
+import subprocess
+import os
 
-def scan_aps(interface):
+def scan_aps(interface, time):
     """
     Run a scan to show all available access points.
     """
-    airmon = pyrcrack.AirmonNg()
-    async with airmon(interface) as mon:
-        async with pyrcrack.AirodumpNg() as pdump:
-            async for aps in pdump(mon.monitor_interface):
-                break # So notebook execution doesn't get stuck here 
+    subprocess.run(['timeout',time,'airodump-ng','-w','results','--output-format','csv',interface]) 
     
-    return aps
 
 def scan_ap(interface, ap):
     """

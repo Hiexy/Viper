@@ -1,5 +1,8 @@
 from viper.scan.scan import scan_aps, scan_ap
 
+import subprocess
+import re
+
 class Viper:
     def __init__(self):
         self.interface = self.init_interface()
@@ -8,7 +11,21 @@ class Viper:
         """
         Initiate wireless network interface for monitor mode.
         """
-        pass
+        subprocess.run(['airmon-ng','check','kill'])
+        output = subprocess.run('iwconfig',capture_output=True).stdout.decode()
+        interface = output.split()[0]
+
+        mode = re.findall('Mode:\w*', output)[0].split('Mode:')[1]
+
+        if mode.lower() == 'managed': 
+            subprocess.run(['airmon-ng','start',interface])
+        
+        output = subprocess.run('iwconfig',capture_output=True).stdout.decode()
+        interface = output.split()[0]
+
+        return interface
+
+        
     
     def scan(self):
         """
