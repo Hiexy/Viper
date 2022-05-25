@@ -12,8 +12,15 @@ def scan_aps(interface, seconds):
     path = os.path.join(parent_dir, directory)
     fname = f'results_{time.time_ns()}'
     fpath = f'{path}{fname}'
+
     if not os.path.isdir(path):
         os.mkdir(path)
+
+    if not os.path.isdir(fpath):
+        os.mkdir(fpath)
+
+    fpath = f'{path}{fname}/{fname}'
+
     try:
         subprocess.run(['airodump-ng','-w',fpath,'--output-format','csv',interface], stdout=subprocess.DEVNULL, timeout=seconds)
     except subprocess.TimeoutExpired:

@@ -1,5 +1,6 @@
 from Viper.scan.scan import scan_aps
-from Viper.util.read_csv import read_csv
+from Viper.util.read import read_csv
+from Viper.attack.wep import attack_wep
 
 import subprocess
 import re
@@ -37,4 +38,25 @@ class Viper:
         Scan all available access points and return all available information.
         """
         path = scan_aps(self.interface, seconds)
-        ap_list, station_list = read_csv(path)
+
+        self.directory = '/'.join(_ for _ in path.split('.')[0].split('/')[:-1])
+        ap_list, station_list = read_csv(path, self.directory)
+
+        self.ap = ap_list
+        self.stations = station_list
+
+    def attack(self):
+        for c, i in enumerate(self.ap):
+            if i['Privacy'] == ' WEP':
+                break
+
+        # index = input('Enter index:')
+        ap = self.ap[c]
+        print(ap)
+        for c, i in enumerate(self.stations):
+            if i['BSSID'] == ap['BSSID']:
+                break
+
+        c_mac = self.stations[c]['StationMAC']
+        print(self.stations[c])
+        attack_wep(self.interface, self.directory, ap, c_mac)
