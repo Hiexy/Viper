@@ -1,4 +1,5 @@
-from viper.scan.scan import scan_aps, scan_ap
+from Viper.scan.scan import scan_aps
+from Viper.util.read_csv import read_csv
 
 import subprocess
 import re
@@ -13,12 +14,16 @@ class Viper:
         """
         subprocess.run(['airmon-ng','check','kill'])
         output = subprocess.run('iwconfig',capture_output=True).stdout.decode()
-        interface = output.split()[0]
 
+        try:
+            interface = output.split()[0]
+        except:
+            raise Exception('No Wireless interface.')
+        
         mode = re.findall('Mode:\w*', output)[0].split('Mode:')[1]
 
-        if mode.lower() == 'managed': 
-            subprocess.run(['airmon-ng','start',interface])
+        if mode.lower() == 'managed' or mode.lower() == 'auto': 
+            subprocess.run(['airmon-ng','start',interface], stdout=subprocess.DEVNULL)
         
         output = subprocess.run('iwconfig',capture_output=True).stdout.decode()
         interface = output.split()[0]
@@ -27,12 +32,10 @@ class Viper:
 
         
     
-    def scan(self):
+    def scan(self, seconds):
         """
         Scan all available access points and return all available information.
         """
-        aps = scan_aps(self.interface)
-        for ap in aps:
-            result_ap = scan_ap(self.interface, ap)
-            print(result_ap.asdict())
-        
+        path = scan_aps(self.interface, seconds)
+        print(path)
+        read_csv(path)

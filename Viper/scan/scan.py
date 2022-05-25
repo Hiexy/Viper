@@ -1,22 +1,22 @@
 import subprocess
 import os
+import time
+import os
 
-def scan_aps(interface, time):
+def scan_aps(interface, seconds):
     """
-    Run a scan to show all available access points.
+    Scan access points and stores results in a csv file.
     """
-    subprocess.run(['timeout',time,'airodump-ng','-w','results','--output-format','csv',interface]) 
-    
+    parent_dir = os.getcwd()
+    directory = 'results/'
+    path = os.path.join(parent_dir, directory)
+    fname = f'results_{time.time_ns()}'
+    fpath = f'{path}{fname}'
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    try:
+        subprocess.run(['airodump-ng','-w',fpath,'--output-format','csv',interface], stdout=subprocess.DEVNULL, timeout=seconds)
+    except subprocess.TimeoutExpired:
+        pass
 
-def scan_ap(interface, ap):
-    """
-    Scan a specific access point and return more results.
-    """
-    async with airmon(interface) as mon:
-    # Re-set the interface in monitor mode as in 
-    # previous execution it would have been cleaned up
-        async with pyrcrack.AirodumpNg() as pdump:
-            async for result in pdump(mon.monitor_interface, **ap.airodump):
-                break
-    
-    return result
+    return f'{fpath}-01.csv'
