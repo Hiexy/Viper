@@ -37,5 +37,4 @@ class Viper:
         Scan all available access points and return all available information.
         """
         path = scan_aps(self.interface, seconds)
-        print(path)
-        read_csv(path)
+        ap_list, station_list = read_csv(path)
