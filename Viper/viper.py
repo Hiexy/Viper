@@ -42,8 +42,10 @@ class Viper:
         self.directory = '/'.join(_ for _ in path.split('.')[0].split('/')[:-1])
         ap_list, station_list = read_csv(path, self.directory)
 
-        self.ap = ap_list
-        self.stations = station_list
+        self.ap = ap_list[1:]
+        self.stations = station_list[1:]
+        print(self.ap[:3])
+        print(self.stations[:3])
 
     def attack(self):
         for c, i in enumerate(self.ap):

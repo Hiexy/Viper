@@ -1,5 +1,5 @@
-# from Viper.viper import Viper
-# from Viper.attack.wep import attack_wep
+from Viper.viper import Viper
+from Viper.attack.wep import attack_wep
 
 from subprocess import PIPE, Popen
 import sys
@@ -7,10 +7,11 @@ import re
 
 # attack_wep()
 
-# # viper = Viper()
+viper = Viper()
+
+viper.scan(5)
 
 # # viper.attack()
 
-# # viper.scan(15)
 
 

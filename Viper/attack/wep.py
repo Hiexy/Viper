@@ -29,7 +29,7 @@ def attack_wep():
 
 def wep_crack_no_ivs():
 
-    lst = open('/usr/share/wordlists/ok.lst' , 'r')   ######Choose the dictionary file 
+    lst = open('/usr/share/wordlists/ok.lst' , 'r') 
     for line in lst:
         word=re.sub(r'\W+', '', line) 	
         word.isalpha()          

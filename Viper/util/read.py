@@ -49,6 +49,7 @@ def read_csv(path, directory):
         for key in i:
             if key == 'Probes':
                 pass
-            i[key].replace(' ', '')
+            if isinstance(i, str):
+                i[key].replace(' ', '')
     
     return ap_list, station_list
