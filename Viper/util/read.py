@@ -1,6 +1,7 @@
 import csv
 import os
 
+
 def read_csv(path, directory):
     apfile = directory + '/AP.csv'
     stationsfile = directory + '/Station.csv'
@@ -12,18 +13,17 @@ def read_csv(path, directory):
         flag = False
         for i in lines.split('\n\n')[0].split('\n')[1:]:
             if not flag:
-                f.write(i.replace(' ','') + '\n')
+                f.write(i.replace(' ', '') + '\n')
                 flag = True
             f.write(i + '\n')
-    
+
     with open(stationsfile, 'w') as f:
         flag = False
         for i in lines.split('\n\n')[1].split('\n'):
             if not flag:
-                f.write(i.replace(' ','') + '\n')
+                f.write(i.replace(' ', '') + '\n')
                 flag = True
             f.write(i + '\n')
-    
 
     reader = csv.DictReader(open(apfile, 'r'))
 
@@ -51,5 +51,5 @@ def read_csv(path, directory):
                 pass
             if isinstance(i, str):
                 i[key].replace(' ', '')
-    
+
     return ap_list, station_list

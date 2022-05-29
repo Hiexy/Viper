@@ -3,6 +3,7 @@ import os
 import time
 import os
 
+
 def scan_aps(interface, seconds):
     """
     Scan access points and stores results in a csv file.
@@ -22,7 +23,8 @@ def scan_aps(interface, seconds):
     fpath = f'{path}{fname}/{fname}'
 
     try:
-        subprocess.run(['airodump-ng','-w',fpath,'--output-format','csv',interface], stdout=subprocess.DEVNULL, timeout=seconds)
+        subprocess.run(['airodump-ng', '-W', '-w', fpath, '--output-format',
+                       'csv', interface], stdout=subprocess.DEVNULL, timeout=seconds)
     except subprocess.TimeoutExpired:
         pass
 

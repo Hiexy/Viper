@@ -1,17 +1,17 @@
 from Viper.viper import Viper
-from Viper.attack.wep import attack_wep
-
-from subprocess import PIPE, Popen
-import sys
-import re
-
-# attack_wep()
 
 viper = Viper()
 
-viper.scan(5)
+viper.scan(15)
 
-# # viper.attack()
+print(viper.stations)
 
+ctr = 0
+for i in viper.ap:
+    if '70:72:3C:C5:55:F3' in i['BSSID']:
+        break
+    ctr += 1
 
+index = ctr
 
+viper.attack(index)

