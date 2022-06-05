@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rm -rf /home/kali/Viper/results/*
-rm -rf /home/kali/Viper/replay*
+rm -rf /home/kali/Documents/Viper/results/*
+rm -rf /home/kali/Documents/Viper/replay*

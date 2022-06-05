@@ -250,7 +250,7 @@
 
 <body>
     <H1>Results</H1>
-    <div class="container, wrapper" style="margin-top: 8%;">
+    <div class="container, wrapper" style="margin-top: 8%;margin-left: 34%;">
         <table id="networkstable">
             <thead>
                 <tr>
@@ -266,20 +266,24 @@
                     <td>{{network['channel']}}</td>
                 </tr>
                 <tr>
+                    <th>Authentication</th>
+                    <td>{{network['Authentication']}}</td>
+                </tr>
+                <tr>
                     <th>Cipher</th>
-                    <td>CCMP</td>
+                    <td>{{network['Cipher']}}</td>
                 </tr>
                 <tr>
                     <th>Encryption</th>
-                    <td>WPA</td>
+                    <td>{{network['Privacy']}}</td>
                 </tr>
                 <tr>
                     <th>Passphrase</th>
-                    <td>butterfly</td>
+                    <td>{{password}}</td>
                 </tr>
                 <tr>
                     <th>Method</th>
-                    <td>ASLEAP</td>
+                    <td>{{method}}</td>
                 </tr>
             </thead>
 
@@ -291,13 +295,13 @@
 <div class="wrapper">
 
     <div class="btns">
-        <a href="#" style="margin-left: 8%;">Create Rogue AP</a>
-        <a href="#">Done</a>
+        <a href="#" style="margin-left: 25%;">Create Rogue AP</a>
+        <a href="/">Done</a>
     </div>
 </div>
 
 
-<script>
+<!-- <script>
     const buttons = document.querySelectorAll("a");
     buttons.forEach((button) => {
         button.onclick = function (e) {
@@ -314,6 +318,6 @@
     });
 
 
-</script>
+</script> -->
 
 </html>

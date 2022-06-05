@@ -14,6 +14,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
+        print(username, password)
         user = User.query.filter_by(username=username).first()
         if user:
             if check_password_hash(user.password, password):
@@ -21,7 +22,7 @@ def login():
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
-                flash('Incorrect password, try again.', category='error')
+                return 'Incorrect Password'
         else:
             flash('Username does not exist.', category='error')
 
@@ -38,7 +39,6 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
-        email = request.form.get('email')
         username = request.form.get('username')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -46,8 +46,6 @@ def sign_up():
         user = User.query.filter_by(username=username).first()
         if user:
             flash('Username already exists.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
         elif len(username) < 2:
             flash('First name must be greater than 1 character.', category='error')
         elif password1 != password2:
@@ -55,7 +53,7 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, username=username, password=generate_password_hash(
+            new_user = User(username=username, password=generate_password_hash(
                 password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
@@ -63,4 +61,4 @@ def sign_up():
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
 
-    return render_template("sign_up.html", user=current_user)
+    return render_template("signup.html", user=current_user)

@@ -250,40 +250,95 @@
 
 <body>
     <H1>Attacking</H1>
-    <div class="container wrapper">
-        <table id="networkstable">
+
+
+    <form action="/attack/{{method}}" method="post" id="myform">
+        <input type="hidden" id="BSSID" name="BSSID" value="{{network['BSSID']}}">
+        <table id="networkstable" style="margin-top: 5%; margin-left: 34%;">
             <thead>
                 <tr>
-                    <th>Station MAC</th>
+                    <th>ESSID</th>
                     <th>BSSID</th>
-                    <th>ProbedESSIDs</th>
-
+                    <th>Channel</th>
+                    <th>Authentication</th>
+                    <th>WPS</th>
+                    <th>Cipher</th>
+                    <th>Encryption</th>
                 </tr>
             </thead>
             <tbody>
-                {% for station in stations %}
 
-
-
-                <td>{{station['StationMAC']}}</td>
-                <td>{{station['BSSID']}}</td>
-                <td>{{station['ProbedESSIDs']}}</td>
+                <td>{{network['ESSID']}}</td>
+                <td>{{network['BSSID']}}</td>
+                <td>{{network['channel']}}</td>
+                <td>{{network['Authentication']}}</td>
+                <td>{{network['WPS']}}</td>
+                <td>{{network['Cipher']}}</td>
+                <td>{{network['Privacy']}}</td>
 
                 </tr>
-                {% endfor %}
 
 
             </tbody>
         </table>
-    </div>
+        {% if stations %}
+        <div class="container wrapper">
+            <table id="networkstable" style="margin-left: 17%">
+                <thead>
+                    <tr>
+                        <th>Attack</th>
+                        <th>Station MAC</th>
+                        <th>BSSID</th>
+                        <th>ProbedESSIDs</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for station in stations %}
+
+
+                    <td><input type="radio" id="stationMAC" name="stationMAC" value="{{station['StationMAC']}}"></td>
+                    <td>{{station['StationMAC']}}</td>
+                    <td>{{station['BSSID']}}</td>
+                    <td>{{station['ProbedESSIDs']}}</td>
+
+                    </tr>
+                    {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+
+
+        {% else %}
+        <h2 style="margin-top: 5%;">No Stations for this access point</h2>
+        {% endif %}
+        <h3 style="margin-top: 10%">Attacks: {{attacks}}</h3>
+        <label for="dictionary">Choose a dictionary:</label>
+        <select name="dictionary" id="dictionary">
+            <option value="rockyou">Rockyou.txt</option>
+            <option value="numbers">Jordanian phone Numbers</option>
+        </select>
+        <label for="time">Time to scan:</label>
+        <input type="text" name="time" id="time">
+        {% if 'WPA' in network['Privacy'] %}
+        <label for="deauth">Number of Deauthentication Packets:</label>
+        <input type="text" name="deauth" id="deauth">
+        {% endif %}
+        <div class="wrapper" style="margin-top: 20%; margin-left:40%">
+
+            <div class="btns">
+
+                <a href="#" style="margin-left:7%;" onclick="document.getElementById('myform').submit()">Attack</a>
+            </div>
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+
+    <a href="/scan">Return to Scanning</a>
 </body>
-<div class="wrapper" style="margin-top: 20%; margin-left:40%">
 
-    <div class="btns">
-
-        <a href="#">Attack</a>
-    </div>
-</div>
 
 
 <script>

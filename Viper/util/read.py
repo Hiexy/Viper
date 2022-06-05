@@ -1,5 +1,5 @@
 import csv
-import os
+import json
 
 
 def read_csv(path, directory):
@@ -53,3 +53,20 @@ def read_csv(path, directory):
                 i[key].replace(' ', '')
 
     return ap_list, station_list
+
+def add_wps(ap_list, wash_path):
+    with open(wash_path, 'r') as f:
+        aps = f.read().split('\n')[:-1]
+    
+    wash_ap = []
+    for i in aps:
+        wash_ap.append(json.loads(i))
+    
+    for i in wash_ap:
+        for j in ap_list:
+            if i['bssid'].lower() == j['BSSID'].lower():
+                j['WPS'] = float(i['wps_state'])
+    
+    return ap_list
+    
+

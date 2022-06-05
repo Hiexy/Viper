@@ -15,6 +15,11 @@
         margin-top: 10pc;
     }
 
+    h2 {
+        text-align: center;
+        margin-top: 10pc;
+    }
+
     html,
     body {
         height: 100%;
@@ -30,13 +35,13 @@
 
     .container {
         position: absolute;
-        top: 60%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
 
     table {
-        width: 1000px;
+        width: 800px;
         border-collapse: collapse;
         overflow: hidden;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -161,9 +166,84 @@
         content: counter(step);
         counter-increment: step;
     }
+
+    html,
+    body {
+
+        text-align: center;
+    }
+
+    .wrapper {
+        margin: auto;
+        width: 50%;
+        padding: 19px;
+
+    }
+
+    .wrapper .text {
+        font-size: 35px;
+        font-weight: 600;
+    }
+
+    .wrapper p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+
+    .wrapper .btns {
+        display: flex;
+        margin: 30px 0 20px 0;
+    }
+
+    .btns a {
+        position: relative;
+        margin: 0 20px;
+        height: 60px;
+        width: 300px;
+
+        line-height: 60px;
+        border-radius: 30px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btns a {
+        background: linear-gradient(90deg, #0c1e6e, #1d278a);
+    }
+
+    .btns a>span {
+        position: absolute;
+        background: #fff;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: ripples 0.6s linear infinite;
+    }
+
+    @keyframes ripples {
+        0% {
+            width: 0px;
+            height: 0px;
+            opacity: 0.5;
+        }
+
+        100% {
+            width: 500px;
+            height: 500px;
+            opacity: 0;
+        }
+    }
 </style>
 
-<head><img src="static/logo.png" style="position: fixed;"></head>
+
+<!-- <head><img src="static/logo.png" style="position: fixed;"></head> -->
 <div class="progressbar-wrapper" style="margin-left: 10%;">
     <ul class="progressbar">
         <li class="active">Scanning</li>
@@ -175,39 +255,53 @@
 
 
 <body>
-    <H1>Scanning</H1>
-    <div class="container">
-        <table id="networkstable">
-            <thead>
-                <tr>
-                    <th>ESSID</th>
-                    <th>BSSID</th>
-                    <th>Channel</th>
-                    <th>Authentication</th>
-                    <th>WPS</th>
-                    <th>Cipher</th>
-                    <th>Encryption</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for network in networks %}
+    <H1 style="margin-bottom: 15%;">Scanning</H1>
+    {% if networks%}
+    <form action="/attack" method="post" id="myform">
+        <div class="container">
+            <table id="networkstable" style="margin-top: 95%; margin-bottom: 15%;">
+                <thead>
+                    <tr>
+                        <th>Attack</th>
+                        <th>ESSID</th>
+                        <th>BSSID</th>
+                        <th>Channel</th>
+                        <th>Authentication</th>
+                        <th>WPS</th>
+                        <th>Cipher</th>
+                        <th>Encryption</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for network in networks %}
 
 
+                    <td><input type="radio" id="BSSID" name="BSSID" value="{{network['BSSID']}}"></td>
+                    <td>{{network['ESSID']}}</td>
+                    <td>{{network['BSSID']}}</td>
+                    <td>{{network['channel']}}</td>
+                    <td>{{network['Authentication']}}</td>
+                    <td>{{network['WPS']}}</td>
+                    <td>{{network['Cipher']}}</td>
+                    <td>{{network['Privacy']}}</td>
 
-                <td>{{network['ESSID']}}</td>
-                <td>{{network['BSSID']}}</td>
-                <td>{{network['channel']}}</td>
-                <td>{{network['Authentication']}}</td>
-                <td>{{network['WPS']}}</td>
-                <td>{{network['Cipher']}}</td>
-                <td>{{network['Privacy']}}</td>
-                </tr>
-                {% endfor %}
+                    </tr>
+                    {% endfor %}
 
 
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+        <div class="wrapper" style="margin-top: 60%; margin-left:43%">
+            <div class="btns">
+                <a href="#" onclick="document.getElementById('myform').submit()">Attack</a>
+            </div>
+        </div>
+    </form>
+    {% else %}
+    <h2>No Scanning, Please return to the main page and start a scan</h2>
+    <a href="/">Return to Main Page</a>
+    {% endif %}
 </body>
 <script>
 

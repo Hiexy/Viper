@@ -1,7 +1,6 @@
 import subprocess
 import os
 import time
-import os
 
 
 def scan_aps(interface, seconds):
@@ -23,9 +22,17 @@ def scan_aps(interface, seconds):
     fpath = f'{path}{fname}/{fname}'
 
     try:
-        subprocess.run(['airodump-ng', '-W', '-w', fpath, '--output-format',
+        subprocess.run(['airodump-ng', '-w', fpath, '--output-format',
                        'csv', interface], stdout=subprocess.DEVNULL, timeout=seconds)
     except subprocess.TimeoutExpired:
         pass
 
-    return f'{fpath}-01.csv'
+    try:
+        washpath = f'{path}{fname}/wash'
+        os.system(f'touch {washpath}')
+        f = open(washpath, 'w')
+        subprocess.run(['wash', '-i', interface, '-j', '-s'], stdout=f, timeout=seconds)
+    except subprocess.TimeoutExpired:
+        pass
+
+    return f'{fpath}-01.csv', washpath

