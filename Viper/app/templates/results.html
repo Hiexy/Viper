@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    * {
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 10pc;
+    }
+
+    html,
+    body {
+        height: 100%;
+
+    }
+
+    body {
+        margin: 0;
+        background: linear-gradient(45deg, #fff, #fff);
+
+        font-weight: 100;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    table {
+        width: 800px;
+        border-collapse: collapse;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #000080;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    thead th {
+        background-color: rgb(46, 47, 126);
+        color: #fff;
+    }
+
+
+    tbody tr:hover {
+        background-color: rgb(85, 131, 183);
+    }
+
+    tbody td {
+        position: relative;
+    }
+
+    tbody th :hover ::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -9999px;
+        bottom: -9999px;
+        background-color: rgba(255, 255, 255, 0.2);
+        z-index: -1;
+    }
+
+    .progressbar-wrapper {
+        background: #fff;
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        margin: auto;
+    }
+
+    .progressbar li {
+        list-style-type: none;
+        width: 20%;
+        float: left;
+        font-size: 12px;
+        position: relative;
+        text-align: center;
+        text-transform: uppercase;
+        color: #7d7d7d;
+    }
+
+    .progressbar li:before {
+        width: 60px;
+        height: 60px;
+        content: "";
+        line-height: 60px;
+        border: 2px solid #7d7d7d;
+        display: block;
+        text-align: center;
+        margin: 0 auto 3px auto;
+        border-radius: 50%;
+        position: relative;
+        z-index: 2;
+        background-color: #fff;
+    }
+
+    .progressbar li:after {
+        width: 100%;
+        height: 2px;
+        content: '';
+        position: absolute;
+        background-color: #7d7d7d;
+        top: 30px;
+        left: -50%;
+        z-index: 0;
+    }
+
+    .progressbar li:first-child:after {
+        content: none;
+    }
+
+    .progressbar li.active {
+        color: #000080;
+        font-weight: bold;
+    }
+
+    .progressbar li.active:before {
+        border-color: rgb(46, 47, 126);
+        background: #000080;
+    }
+
+    .progressbar li.active+li:after {
+        background-color: rgb(46, 47, 126);
+    }
+
+    .progressbar li.active:before {
+        background: rgb(46, 47, 126) url(user.svg) no-repeat center center;
+        background-size: 60%;
+        color: #fff;
+    }
+
+    .progressbar li::before {
+        background: #fff url(user.svg) no-repeat center center;
+        background-size: 60%;
+    }
+
+    .progressbar {
+        counter-reset: step;
+
+    }
+
+    .progressbar li:before {
+        content: counter(step);
+        counter-increment: step;
+    }
+
+    html,
+    body {
+
+        text-align: center;
+    }
+
+    .wrapper {
+        margin: auto;
+        width: 50%;
+        padding: 19px;
+
+    }
+
+    .wrapper .text {
+        font-size: 35px;
+        font-weight: 600;
+    }
+
+    .wrapper p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+
+    .wrapper .btns {
+        display: flex;
+        margin: 30px 0 20px 0;
+    }
+
+    .btns a {
+        position: relative;
+        margin: 0 20px;
+        height: 60px;
+        width: 300px;
+
+        line-height: 60px;
+        border-radius: 30px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btns a {
+        background: linear-gradient(90deg, #0c1e6e, #1d278a);
+    }
+
+    .btns a>span {
+        position: absolute;
+        background: #fff;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: ripples 0.6s linear infinite;
+    }
+
+    @keyframes ripples {
+        0% {
+            width: 0px;
+            height: 0px;
+            opacity: 0.5;
+        }
+
+        100% {
+            width: 500px;
+            height: 500px;
+            opacity: 0;
+        }
+    }
+</style>
+
+<div class="progressbar-wrapper" style="padding-left: 10%;">
+    <ul class="progressbar">
+        <li>Scanning</li>
+        <li>Attacking</li>
+        <li class="active">Results</li>
+        <li>Post Exploit</li>
+    </ul>
+</div>
+
+
+<body>
+    <H1>Results</H1>
+    <div class="container, wrapper" style="margin-top: 8%;">
+        <table id="networkstable">
+            <thead>
+                <tr>
+                    <th>ESSID</th>
+                    <td>{{network['ESSID']}}</td>
+                </tr>
+                <tr>
+                    <th>BSSID</th>
+                    <td>{{network['BSSID']}}</td>
+                </tr>
+                <tr>
+                    <th>Channel</th>
+                    <td>{{network['channel']}}</td>
+                </tr>
+                <tr>
+                    <th>Cipher</th>
+                    <td>CCMP</td>
+                </tr>
+                <tr>
+                    <th>Encryption</th>
+                    <td>WPA</td>
+                </tr>
+                <tr>
+                    <th>Passphrase</th>
+                    <td>butterfly</td>
+                </tr>
+                <tr>
+                    <th>Method</th>
+                    <td>ASLEAP</td>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+
+
+</body>
+<div class="wrapper">
+
+    <div class="btns">
+        <a href="#" style="margin-left: 8%;">Create Rogue AP</a>
+        <a href="#">Done</a>
+    </div>
+</div>
+
+
+<script>
+    const buttons = document.querySelectorAll("a");
+    buttons.forEach((button) => {
+        button.onclick = function (e) {
+            let x = e.clientX - e.target.offsetLeft;
+            let y = e.clientY - e.target.offsetTop;
+            let ripple = document.createElement("span");
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            this.appendChild(ripple);
+            setTimeout(function () {
+                ripple.remove();
+            }, 600); // 1second = 1000ms
+        }
+    });
+
+
+</script>
+
+</html>

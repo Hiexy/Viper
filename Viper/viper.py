@@ -25,7 +25,6 @@ class Viper:
             raise Exception('No Wireless interface.')
 
         mode = re.findall('Mode:\w*', output)[0].split('Mode:')[1]
-
         if mode.lower() == 'managed' or mode.lower() == 'auto':
             subprocess.run(['airmon-ng', 'start', interface],
                            stdout=subprocess.DEVNULL)
