@@ -1,13 +1,20 @@
-from turtle import st
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, request
 from flask_login import login_required, current_user
+from sympy import sec
 from Viper.attack.wep import wep_crack, wep_crack_no_ivs
 from Viper.attack.wpa import wpa_crack
+from Viper.attack.enterprise import attack_EAP_PEAP
+from Viper.postexp.rogue_ap import create_rogue_ap
 from . import viper
 import json
 
 views = Blueprint('views', __name__)
 
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
 
 @views.route('/', methods=['GET', 'POST'])
 # @login_required
@@ -147,6 +154,44 @@ def attack_wpa():
         flash('Password not found.', category='error')
         return redirect(f"/")
 
+@views.route('/attack/mgt', methods=['POST'])
+def attack_enterprise():
+    bssid = request.form.get('BSSID')
+    station = request.form.get('stationMAC')
+    seconds = int(request.form.get('time'))
+    dictionary = request.form.get('dictionary')
+    deauths = request.form.get('deauth')
+
+    if dictionary == 'rockyou':
+        dictionary = '/home/kali/Documents/Viper/wordlists/rockyou.txt'
+    elif dictionary == 'numbers':
+        dictionary = '/home/kali/Documents/Viper/wordlists/jordanian_numbers'
+    
+    for i in viper.ap:
+        if bssid.lower() in i['BSSID'].lower():
+            ap = i
+            break
+    
+    password = attack_EAP_PEAP(viper.interface, bssid, deauths, station, ap['ESSID'], ap['channel'], viper.directory, dictionary, seconds)
+
+    if password:
+        print(password)
+        method = 'ASLEAP/John'
+        return redirect(f"/results?BSSID={bssid}&method={method}&password={password}")
+
+
+@views.route('/rogue_ap', methods=['POST'])
+def create_rogueap():
+    essid = request.form.get('essid')
+    channel = request.form.get('channel')
+    create_rogue_ap(viper.interface, essid, channel)
+
+    return redirect("/postexp")
+
+@views.route('/postexp', methods=['GET'])
+def post_exp():
+    return render_template("post.html")
+
 @views.route('/results', methods=['GET', 'POST'])
 def results():
     bssid = request.args.get('BSSID')
@@ -162,3 +207,9 @@ def results():
         else:
             return render_template('results.html', network=ap, method='All methods failed', password='Password Not Cracked')
     return 'No AP attacked, please retry'
+
+
+@views.route("/off", methods=['GET'])
+def close_app():
+    shutdown_server()
+    return 'Server shutting down...'

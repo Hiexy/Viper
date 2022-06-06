@@ -192,7 +192,7 @@
         margin: 30px 0 20px 0;
     }
 
-    .btns a {
+    .btns input {
         position: relative;
         margin: 0 20px;
         height: 60px;
@@ -210,11 +210,11 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    .btns a {
+    .btns input {
         background: linear-gradient(90deg, #0c1e6e, #1d278a);
     }
 
-    .btns a>span {
+    .btns input>span {
         position: absolute;
         background: #fff;
         transform: translate(-50%, -50%);
@@ -254,7 +254,7 @@
 
     <form action="/attack/{{method}}" method="post" id="myform">
         <input type="hidden" id="BSSID" name="BSSID" value="{{network['BSSID']}}">
-        <table id="networkstable" style="margin-top: 5%; margin-left: 34%;">
+        <table id="networkstable" style="margin-top: 5%; margin-left: 29%;">
             <thead>
                 <tr>
                     <th>ESSID</th>
@@ -283,7 +283,7 @@
         </table>
         {% if stations %}
         <div class="container wrapper">
-            <table id="networkstable" style="margin-left: 17%">
+            <table id="networkstable" style="margin-left: 8%; margin-top: 15%;">
                 <thead>
                     <tr>
                         <th>Attack</th>
@@ -326,16 +326,10 @@
         <label for="deauth">Number of Deauthentication Packets:</label>
         <input type="text" name="deauth" id="deauth">
         {% endif %}
-        <div class="wrapper" style="margin-top: 20%; margin-left:40%">
-
-            <div class="btns">
-
-                <a href="#" style="margin-left:7%;" onclick="document.getElementById('myform').submit()">Attack</a>
-            </div>
+        <div style="margin-top: 5%;">
+            <input type="submit" value="Submit">
         </div>
-        <input type="submit" value="Submit">
     </form>
-
     <a href="/scan">Return to Scanning</a>
 </body>
 

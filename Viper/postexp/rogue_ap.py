@@ -1,4 +1,4 @@
-import subprocess
+import os
 
 def create_rogue_ap(interface, essid, channel):
-    subprocess.Popen(['airbase-ng', '-e', essid, '-c', channel, interface])
+    os.system(f'airbase-ng -e "{essid}" -c {channel} {interface} &')

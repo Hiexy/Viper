@@ -250,7 +250,7 @@
 
 <body>
     <H1>Results</H1>
-    <div class="container, wrapper" style="margin-top: 8%;margin-left: 34%;">
+    <div class="container, wrapper" style="margin-top: 8%;margin-left: 29%;">
         <table id="networkstable">
             <thead>
                 <tr>
@@ -292,13 +292,22 @@
 
 
 </body>
+
+<form action="/rogue_ap" style="margin-top: 5%;" method="post" id="myform">
+    <label for="essid">ESSID:</label>
+    <input type="text" name="essid" id="essid">
+    <label for="channel">Channel:</label>
+    <input type="text" name="channel" id="channel">
+</form>
+
 <div class="wrapper">
 
     <div class="btns">
-        <a href="#" style="margin-left: 25%;">Create Rogue AP</a>
+        <a href="#" onclick="document.getElementById('myform').submit()" style="margin-left: 17%;">Create Rogue AP</a>
         <a href="/">Done</a>
     </div>
 </div>
+
 
 
 <!-- <script>
